@@ -4,17 +4,31 @@
 
 öncelikle çalışacak appleri yapalım klasik bir python flask kullanacağız.
 
-app1.py ve app2.py Dockerfile ları ile birlikte repoda mevcut.
+app1 ve app2 Dockerfile ları ile birlikte repoda mevcut. 
 
-## nginx-lb
+build alıp containerları çalıştıracağız. 
+
+## nginx-install
 
 öncelikle nginx kuracağız.
 
+apt-get update -y
+
 apt-get install -y nginx
 
+nginx kurduktan sonra cert-bot kurulumu yapacağız. nginx kullandığımız için aşağıdaki şekilde yükleyeceğiz.
 
+```
+apt install python-certbot-nginx 
+````
 
-## nginx load balancer conf.
+spesific domain için certbot çalıştıracağız.
+
+```
+sudo certbot --nginx -d dev-ops.expert -d www.dev-ops.expert
+```
+
+daha sonra /etc/nginx/sites-available/default dosyasını aşağıdaki komutla değiştireceğiz. ve düzenlemeler yapacağız.
 
 ```
 upstream app {
@@ -37,8 +51,8 @@ server {
 
     server_name <domain>;
 
-    ssl_certificate      /etc/letsencrypt/live/lb.serversforhackers.com/fullchain.pem;
-    ssl_certificate_key  /etc/letsencrypt/live/lb.serversforhackers.com/privkey.pem;
+    ssl_certificate      <full.pem>;
+    ssl_certificate_key  <key.pem>;
 
     charset utf-8;
 
